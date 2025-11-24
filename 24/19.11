@@ -1,0 +1,22 @@
+import csv
+
+# 1. Загружаем purchase_log.txt в словарь
+purchases = {}
+with open("purchase_log.txt", encoding="utf-8") as f:
+    for line in f:
+        user, category = line.strip().split(',')
+        purchases[user] = category
+
+# 2. Создаём funnel.csv
+with open("visit_log.csv", encoding="utf-8") as f_in, \
+     open("funnel.csv", "w", encoding="utf-8", newline='') as f_out:
+
+    writer = csv.writer(f_out)
+    writer.writerow(["user_id", "source", "category"])  # заголовок
+
+    for line in f_in:
+        user_id, source = line.strip().split(',')
+
+        # если у пользователя была покупка → записываем
+        if user_id in purchases:
+            writer.writerow([user_id, source, purchases[user_id]])
