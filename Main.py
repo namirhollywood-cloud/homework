@@ -1,0 +1,67 @@
+import csv
+
+
+def load_clients(filename):
+    clients = []
+    with open(filename, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            clients.append(row)
+    return clients
+
+
+def make_description(client):
+    name = client["name"]
+    sex = client["sex"]
+    age = client["age"]
+    device = client["device_type"]
+    browser = client["browser"]
+    bill = client["bill"]
+    region = client["region"]
+
+    if sex == "female":
+        gender_text = "женского пола"
+        verb = "совершила"
+    else:
+        gender_text = "мужского пола"
+        verb = "совершил"
+
+    if device == "mobile":
+        device_text = "мобильного"
+    elif device == "desktop":
+        device_text = "десктопного"
+    elif device == "tablet":
+        device_text = "планшетного"
+    else:
+        device_text = device
+
+    text = (
+        f"Пользователь {name} {gender_text}, {age} лет {verb} покупку на {bill} у.е. "
+        f"с {device_text} браузера {browser}. "
+        f"Регион, из которого совершалась покупка: {region}."
+    )
+    return text
+
+
+def save_descriptions(descriptions, filename):
+    with open(filename, "w", encoding="utf-8") as f:
+        for line in descriptions:
+            f.write(line + "\n")
+
+
+def main():
+    input_file = "web_clients_correct.csv"
+    output_file = "clients_descriptions.txt"
+
+    clients = load_clients(input_file)
+
+    descriptions = []
+    for client in clients:
+        descriptions.append(make_description(client))
+
+    save_descriptions(descriptions, output_file)
+    print("Готово! Записано строк:", len(descriptions))
+
+
+if __name__ == "__main__":
+    main()
